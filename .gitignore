@@ -1,0 +1,56 @@
+# Build
+bin/
+obj/
+[Bb]uild/
+[Bb]uilds/
+[Bb]in/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# Visual Studio files
+.vs/
+
+# Test results
+TestResults/
+*.TestResults/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# EF Core
+Migrations/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Package directories
+node_modules/
+packages/
+
+# Logs
+*.log
+logs/
+
+# Coverage
+*.coverage
+*.coveragexml
+
+# Others
+launchSettings.json
