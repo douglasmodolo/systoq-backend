@@ -7,14 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <None Remove="Interfaces\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SystoQ.Domain\SystoQ.Domain.csproj" />
     <ProjectReference Include="..\SystoQ.Infrastructure\SystoQ.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
     <Folder Include="Mappings\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
