@@ -1,11 +1,18 @@
 using Microsoft.EntityFrameworkCore;
+using SystoQ.Application.UseCases.Products;
+using SystoQ.Domain.Repositories;
 using SystoQ.Infrastructure.Persistence;
+using SystoQ.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// PostgreSQL connection
 builder.Services.AddDbContext<SystoQDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// DI
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<CreateProductUseCase>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

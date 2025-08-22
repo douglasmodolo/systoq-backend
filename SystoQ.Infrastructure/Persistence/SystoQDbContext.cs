@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SystoQ.Domain.Entities;
 
 namespace SystoQ.Infrastructure.Persistence
 {
@@ -7,12 +8,13 @@ namespace SystoQ.Infrastructure.Persistence
         public SystoQDbContext(DbContextOptions<SystoQDbContext> options) : base(options)
         {
         }
+        
+        public DbSet<Product> Products { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SystoQDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
-            // Configure your entities here
-        }
-        // Define DbSet properties for your entities
-        // public DbSet<YourEntity> YourEntities { get; set; }
+        }        
     }
 }
