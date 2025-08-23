@@ -15,7 +15,7 @@ builder.Services.AddDbContext<SystoQDbContext>(options =>
 // DI
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<AddProductUseCase>();
-builder.Services.AddScoped<ICustumerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<AddCustomerUseCase>();
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<AddSaleUseCase>();

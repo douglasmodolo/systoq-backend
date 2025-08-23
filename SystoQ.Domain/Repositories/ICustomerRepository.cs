@@ -2,7 +2,7 @@
 
 namespace SystoQ.Domain.Repositories
 {
-    public interface ICustumerRepository
+    public interface ICustomerRepository
     {
         Task<IEnumerable<Customer>> GetAllCustomersAsync();
         Task<Customer?> GetCustomerByIdAsync(Guid id);
