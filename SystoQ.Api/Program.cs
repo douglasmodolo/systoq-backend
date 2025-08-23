@@ -14,11 +14,11 @@ builder.Services.AddDbContext<SystoQDbContext>(options =>
 
 // DI
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<CreateProductUseCase>();
+builder.Services.AddScoped<AddProductUseCase>();
 builder.Services.AddScoped<ICustumerRepository, CustomerRepository>();
-builder.Services.AddScoped<CreateCustomerUseCase>();
+builder.Services.AddScoped<AddCustomerUseCase>();
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
-builder.Services.AddScoped<CreateSaleUseCase>();
+builder.Services.AddScoped<AddSaleUseCase>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

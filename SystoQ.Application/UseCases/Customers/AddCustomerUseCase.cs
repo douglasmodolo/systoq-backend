@@ -3,11 +3,11 @@ using SystoQ.Domain.Repositories;
 
 namespace SystoQ.Application.UseCases.Customers
 {
-    public class CreateCustomerUseCase
+    public class AddCustomerUseCase
     {
         private readonly ICustumerRepository _customerRepository;
 
-        public CreateCustomerUseCase(ICustumerRepository customerRepository)
+        public AddCustomerUseCase(ICustumerRepository customerRepository)
         {
             _customerRepository = customerRepository;
         }
