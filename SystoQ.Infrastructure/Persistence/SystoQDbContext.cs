@@ -10,7 +10,8 @@ namespace SystoQ.Infrastructure.Persistence
         }
         
         public DbSet<Product> Products { get; set; }
-        
+        public DbSet<Customer> Customers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SystoQDbContext).Assembly);
