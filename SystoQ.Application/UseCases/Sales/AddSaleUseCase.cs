@@ -4,14 +4,14 @@ using SystoQ.Domain.Repositories;
 
 namespace SystoQ.Application.UseCases.Sales
 {
-    public class CreateSaleUseCase
+    public class AddSaleUseCase
     {
         private readonly ISaleRepository _saleRepository;
         private readonly ICustumerRepository _customerRepository;
 
         private readonly Guid DefaultCustomerId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
-        public CreateSaleUseCase(ISaleRepository saleRepository, ICustumerRepository customerRepository)
+        public AddSaleUseCase(ISaleRepository saleRepository, ICustumerRepository customerRepository)
         {
             _saleRepository = saleRepository;
             _customerRepository = customerRepository;

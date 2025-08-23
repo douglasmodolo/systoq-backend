@@ -8,9 +8,9 @@ namespace SystoQ.Api.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly CreateProductUseCase _createProductUseCase;
+        private readonly AddProductUseCase _createProductUseCase;
 
-        public ProductsController(CreateProductUseCase createProductUseCase)
+        public ProductsController(AddProductUseCase createProductUseCase)
         {
             _createProductUseCase = createProductUseCase;
         }
