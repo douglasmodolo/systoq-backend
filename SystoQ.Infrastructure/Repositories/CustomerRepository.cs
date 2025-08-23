@@ -5,7 +5,7 @@ using SystoQ.Infrastructure.Persistence;
 
 namespace SystoQ.Infrastructure.Repositories
 {
-    public class CustomerRepository : ICustumerRepository
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly SystoQDbContext _context;
 

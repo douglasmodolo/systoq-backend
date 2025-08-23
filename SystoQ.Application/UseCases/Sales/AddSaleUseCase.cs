@@ -7,11 +7,11 @@ namespace SystoQ.Application.UseCases.Sales
     public class AddSaleUseCase
     {
         private readonly ISaleRepository _saleRepository;
-        private readonly ICustumerRepository _customerRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         private readonly Guid DefaultCustomerId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
-        public AddSaleUseCase(ISaleRepository saleRepository, ICustumerRepository customerRepository)
+        public AddSaleUseCase(ISaleRepository saleRepository, ICustomerRepository customerRepository)
         {
             _saleRepository = saleRepository;
             _customerRepository = customerRepository;

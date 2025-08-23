@@ -5,9 +5,9 @@ namespace SystoQ.Application.UseCases.Customers
 {
     public class AddCustomerUseCase
     {
-        private readonly ICustumerRepository _customerRepository;
+        private readonly ICustomerRepository _customerRepository;
 
-        public AddCustomerUseCase(ICustumerRepository customerRepository)
+        public AddCustomerUseCase(ICustomerRepository customerRepository)
         {
             _customerRepository = customerRepository;
         }
