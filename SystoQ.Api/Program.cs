@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SystoQ.Application.UseCases.Customers;
 using SystoQ.Application.UseCases.Products;
+using SystoQ.Application.UseCases.Sales;
 using SystoQ.Domain.Repositories;
 using SystoQ.Infrastructure.Persistence;
 using SystoQ.Infrastructure.Repositories;
@@ -16,6 +17,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<CreateProductUseCase>();
 builder.Services.AddScoped<ICustumerRepository, CustomerRepository>();
 builder.Services.AddScoped<CreateCustomerUseCase>();
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+builder.Services.AddScoped<CreateSaleUseCase>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
