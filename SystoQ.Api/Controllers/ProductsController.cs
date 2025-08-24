@@ -8,11 +8,11 @@ namespace SystoQ.Api.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly AddProductUseCase _createProductUseCase;
+        private readonly AddProductUseCase _addProductUseCase;
 
         public ProductsController(AddProductUseCase createProductUseCase)
         {
-            _createProductUseCase = createProductUseCase;
+            _addProductUseCase = createProductUseCase;
         }
 
         [HttpPost]
@@ -24,7 +24,7 @@ namespace SystoQ.Api.Controllers
             }
             try
             {
-                var created = await _createProductUseCase.ExecuteAsync(request.Name, request.Description, request.Price, request.Stock);
+                var created = await _addProductUseCase.ExecuteAsync(request.Name, request.Description, request.Price, request.Stock);
                 
                 var response = new ProductDto
                 {

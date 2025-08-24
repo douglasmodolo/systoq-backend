@@ -7,12 +7,12 @@
         public string? Email { get; private set; }
         public string? PhoneNumber { get; private set; }
         
-        public Customer(string name, string email, string? phoneNumber)
+        public Customer(string name, string? email, string? phoneNumber)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Nome é obrigatório.", nameof(name));
             
-            if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+            if (!string.IsNullOrWhiteSpace(email) && !email.Contains("@"))
                 throw new ArgumentException("Email inválido.", nameof(email));
             
             Name = name;

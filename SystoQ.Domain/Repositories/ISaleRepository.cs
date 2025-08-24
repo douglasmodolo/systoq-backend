@@ -2,8 +2,7 @@
 
 namespace SystoQ.Domain.Repositories
 {
-    public interface ISaleRepository
+    public interface ISaleRepository : IRepository<Sale>
     {
-        Task<Sale> AddSaleAsync(Sale sale);
     }
 }
