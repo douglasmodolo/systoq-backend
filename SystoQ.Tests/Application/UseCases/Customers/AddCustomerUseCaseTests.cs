@@ -2,20 +2,24 @@
 using SystoQ.Application.UseCases.Customers;
 using SystoQ.Domain.Entities;
 using SystoQ.Domain.Repositories;
+using SystoQ.Domain.Transactions;
 
 namespace SystoQ.Tests.Application.UseCases.Customers
 {
     [TestFixture]
     public class AddCustomerUseCaseTests
     {
+        private IUnitOfWork _uow;
         private ICustomerRepository _customerRepository;
         private AddCustomerUseCase _addCustomerUseCase;
         
         [SetUp]
         public void SetUp()
         {
+            _uow = Substitute.For<IUnitOfWork>();
             _customerRepository = Substitute.For<ICustomerRepository>();
-            _addCustomerUseCase = new AddCustomerUseCase(_customerRepository);
+            _uow.CustomerRepository.Returns(_customerRepository);
+            _addCustomerUseCase = new AddCustomerUseCase(_uow);
         }
 
         [Test]
@@ -34,11 +38,12 @@ namespace SystoQ.Tests.Application.UseCases.Customers
             Assert.That(result.Email, Is.EqualTo(email));
             Assert.That(result.PhoneNumber, Is.EqualTo(phoneNumber));
 
-            await _customerRepository.Received(1).AddCustomerAsync(Arg.Is<Customer>(c =>
+            _customerRepository.Received(1).Create(Arg.Is<Customer>(c =>
                 c.Name == name &&
                 c.Email == email &&
                 c.PhoneNumber == phoneNumber));
-        }
 
+            await _uow.Received(1).CommitAsync();
+        }
     }
 }

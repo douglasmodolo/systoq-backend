@@ -4,20 +4,10 @@ using SystoQ.Infrastructure.Persistence;
 
 namespace SystoQ.Infrastructure.Repositories
 {
-    public class SaleRepository : ISaleRepository
+    public class SaleRepository : Repository<Sale>, ISaleRepository
     {
-        private readonly SystoQDbContext _context;
-
-        public SaleRepository(SystoQDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<Sale> AddSaleAsync(Sale sale)
-        {
-            await _context.Sales.AddAsync(sale);
-            await _context.SaveChangesAsync();
-            return sale;
+        public SaleRepository(SystoQDbContext context) : base(context)
+        {            
         }
     }
 }

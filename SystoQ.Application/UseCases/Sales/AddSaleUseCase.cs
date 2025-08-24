@@ -1,27 +1,25 @@
 ﻿using SystoQ.Application.UseCases.Sales.DTOs;
 using SystoQ.Domain.Entities;
-using SystoQ.Domain.Repositories;
+using SystoQ.Domain.Transactions;
 
 namespace SystoQ.Application.UseCases.Sales
 {
     public class AddSaleUseCase
     {
-        private readonly ISaleRepository _saleRepository;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IUnitOfWork _uow;
 
         private readonly Guid DefaultCustomerId = Guid.Parse("00000000-0000-0000-0000-000000000001");
-
-        public AddSaleUseCase(ISaleRepository saleRepository, ICustomerRepository customerRepository)
+        
+        public AddSaleUseCase(IUnitOfWork uow)
         {
-            _saleRepository = saleRepository;
-            _customerRepository = customerRepository;
+            _uow = uow;
         }
 
         public async Task<Sale> ExecuteAsync(List<SaleItemInputDto> items, Guid? customerId = null)
         {
             var idCustomer = customerId ?? DefaultCustomerId;
 
-            var customer = await _customerRepository.GetCustomerByIdAsync(idCustomer);
+            var customer = await _uow.CustomerRepository.GetByIdAsync(idCustomer);
             
             if (customer == null)
             {
@@ -36,7 +34,8 @@ namespace SystoQ.Application.UseCases.Sales
                 sale.AddItem(saleItem);
             }
 
-            await _saleRepository.AddSaleAsync(sale);
+            _uow.SaleRepository.Create(sale);
+            await _uow.CommitAsync();
             return sale;
         }
     }

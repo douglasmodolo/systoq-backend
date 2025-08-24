@@ -1,49 +1,53 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SystoQ.Domain.Entities;
+﻿using SystoQ.Domain.Entities;
+using SystoQ.Domain.Filters.Products;
 using SystoQ.Domain.Repositories;
 using SystoQ.Infrastructure.Persistence;
+using X.PagedList;
 
 namespace SystoQ.Infrastructure.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : Repository<Product>, IProductRepository
     {
-        private readonly SystoQDbContext _context;
-
-        public ProductRepository(SystoQDbContext context)
-        {
-            _context = context;
+        public ProductRepository(SystoQDbContext context) : base(context)
+        {            
         }
 
-        public async Task AddProductAsync(Product product)
+        public async Task<IPagedList<Product>?> GetAllPaginatedAsync(ProductsParameters productsParams)
         {
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
+            var products = await GetAllAsync();
+            var ordenedProducts = products.OrderBy(p => p.Name);
+
+            var pagedProducts = await ordenedProducts.ToPagedListAsync(productsParams.PageNumber, productsParams.PageSize);
+
+            return pagedProducts;
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        public async Task<IPagedList<Product>?> GetProductsPriceFilterAsync(ProductsPriceFilter productsPriceFilter)
         {
-            return await _context.Products.ToListAsync();
-        }
+            var products = await GetAllAsync();
+            var productsQueryable = products.AsQueryable();
 
-        public Task<Product?> GetProductByIdAsync(int id)
-        {
-            return _context.Products.FindAsync(id).AsTask();
-        }
-
-        public async Task UpdateProductAsync(Product product)
-        {
-            _context.Products.Update(product);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteProductAsync(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
+            if (productsPriceFilter.Price.HasValue && !string.IsNullOrEmpty(productsPriceFilter.PriceCriterias))
             {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
+                switch (productsPriceFilter.PriceCriterias.ToLower())
+                {
+                    case "greaterthan":
+                        productsQueryable = productsQueryable.Where(p => p.Price > productsPriceFilter.Price.Value);
+                        break;
+                    case "lessthan":
+                        productsQueryable = productsQueryable.Where(p => p.Price < productsPriceFilter.Price.Value);
+                        break;
+                    case "equalto":
+                        productsQueryable = productsQueryable.Where(p => p.Price == productsPriceFilter.Price.Value);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid price criteria specified.");
+                }
             }
+
+            var pagedProducts = await productsQueryable.ToPagedListAsync(productsPriceFilter.PageNumber, productsPriceFilter.PageSize);
+
+            return pagedProducts;
         }
     }
 }
