@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SystoQ.Domain.Common.Enums;
 using SystoQ.Domain.Entities;
+using SystoQ.Domain.Filters.Products;
 using SystoQ.Domain.Repositories;
 using SystoQ.Infrastructure.Persistence;
+using X.PagedList;
 
 namespace SystoQ.Infrastructure.Repositories
 {
@@ -30,20 +33,22 @@ namespace SystoQ.Infrastructure.Repositories
             return _context.Products.FindAsync(id).AsTask();
         }
 
-        public async Task UpdateProductAsync(Product product)
+        public async Task<IPagedList<Product>?> GetProductsPriceFilterAsync(ProductsPriceFilter filter)
         {
-            _context.Products.Update(product);
-            await _context.SaveChangesAsync();
-        }
+            var query = _context.Products.AsQueryable(); // DbSet<Product>
 
-        public async Task DeleteProductAsync(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
+            if (filter.Price.HasValue && filter.Criteria.HasValue)
             {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
+                query = filter.Criteria switch
+                {
+                    PriceCriteria.GreaterThan => query.Where(p => p.Price > filter.Price.Value),
+                    PriceCriteria.LessThan => query.Where(p => p.Price < filter.Price.Value),
+                    PriceCriteria.EqualTo => query.Where(p => p.Price == filter.Price.Value),
+                    _ => query
+                };
             }
+
+            return await query.ToPagedListAsync(filter.PageNumber, filter.PageSize);
         }
     }
 }
