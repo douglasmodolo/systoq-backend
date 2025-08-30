@@ -1,14 +1,14 @@
 ﻿namespace SystoQ.Domain.Entities
 {
-    public class Sale
+    public class Order
     {
         public Guid Id { get; private set; }
         public Guid CustomerId { get; private set; }
         public DateTime Date { get; private set; }
         public decimal TotalAmount { get; private set; }
-        public List<SaleItem> Items { get; private set; } = new();
+        public List<OrderItem> Items { get; private set; } = new();
 
-        public Sale(Guid customerId)
+        public Order(Guid customerId)
         {
             Id = Guid.NewGuid();
             CustomerId = customerId;
@@ -16,7 +16,7 @@
             TotalAmount = 0;
         }
 
-        public void AddItem(SaleItem item)
+        public void AddItem(OrderItem item)
         {
             Items.Add(item);
             TotalAmount += item.Subtotal;

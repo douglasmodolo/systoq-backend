@@ -2,7 +2,7 @@
 
 namespace SystoQ.Domain.Repositories
 {
-    public interface ISaleRepository : IRepository<Sale>
+    public interface IOrderRepository : IRepository<Order>
     {
     }
 }

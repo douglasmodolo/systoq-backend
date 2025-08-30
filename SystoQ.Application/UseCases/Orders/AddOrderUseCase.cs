@@ -1,21 +1,21 @@
-﻿using SystoQ.Application.UseCases.Sales.DTOs;
+﻿using SystoQ.Application.UseCases.Orders.DTOs;
 using SystoQ.Domain.Entities;
 using SystoQ.Domain.Transactions;
 
-namespace SystoQ.Application.UseCases.Sales
+namespace SystoQ.Application.UseCases.Orders
 {
-    public class AddSaleUseCase
+    public class AddOrderUseCase
     {
         private readonly IUnitOfWork _uow;
 
         private readonly Guid DefaultCustomerId = Guid.Parse("00000000-0000-0000-0000-000000000001");
         
-        public AddSaleUseCase(IUnitOfWork uow)
+        public AddOrderUseCase(IUnitOfWork uow)
         {
             _uow = uow;
         }
 
-        public async Task<Sale> ExecuteAsync(List<SaleItemInputDto> items, Guid? customerId = null)
+        public async Task<Order> ExecuteAsync(List<OrderItemInputDto> items, Guid? customerId = null)
         {
             var idCustomer = customerId ?? DefaultCustomerId;
 
@@ -26,17 +26,17 @@ namespace SystoQ.Application.UseCases.Sales
                 throw new ArgumentException("Cliente não encontrado.", nameof(customerId));
             }
 
-            var sale = new Sale(customer.Id);
+            var order = new Order(customer.Id);
 
             foreach (var itemDto in items)
             {
-                var saleItem = new SaleItem(sale.Id, itemDto.ProductId, itemDto.Quantity, itemDto.UnitPrice);
-                sale.AddItem(saleItem);
+                var orderItem = new OrderItem(order.Id, itemDto.ProductId, itemDto.Quantity, itemDto.UnitPrice);
+                order.AddItem(orderItem);
             }
 
-            _uow.SaleRepository.Create(sale);
+            _uow.OrderRepository.Create(order);
             await _uow.CommitAsync();
-            return sale;
+            return order;
         }
     }
 }

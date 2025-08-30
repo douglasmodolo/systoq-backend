@@ -9,7 +9,7 @@ namespace SystoQ.Infrastructure.Transactions
     {
         private ICustomerRepository? _customerRepository;
         private IProductRepository? _productRepository;
-        private ISaleRepository? _saleRepository;
+        private IOrderRepository? _orderRepository;
 
         public SystoQDbContext _context { get; }
 
@@ -31,11 +31,11 @@ namespace SystoQ.Infrastructure.Transactions
             }
         }
 
-        public ISaleRepository SaleRepository
+        public IOrderRepository OrderRepository
         {
             get
             {
-                return _saleRepository ??= new SaleRepository(_context);
+                return _orderRepository ??= new OrderRepository(_context);
             }
         }
 

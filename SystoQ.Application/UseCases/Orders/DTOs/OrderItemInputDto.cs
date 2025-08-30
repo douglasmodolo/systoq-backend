@@ -1,6 +1,6 @@
-﻿namespace SystoQ.Application.UseCases.Sales.DTOs
+﻿namespace SystoQ.Application.UseCases.Orders.DTOs
 {
-    public class SaleItemInputDto
+    public class OrderItemInputDto
     {
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
