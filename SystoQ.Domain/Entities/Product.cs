@@ -29,7 +29,7 @@
         {
             if (quantity < 0 && Math.Abs(quantity) > Stock)
                 throw new InvalidOperationException("Estoque insuficiente para a operação.");
-            Stock += quantity;
+            Stock = quantity;
         }
 
         public void UpdatePrice(decimal newPrice)

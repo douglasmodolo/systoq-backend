@@ -8,5 +8,6 @@ namespace SystoQ.Domain.Repositories
     {
         Task<IPagedList<Product>?> GetAllPaginatedAsync(ProductsParameters productsParams);
         Task<IPagedList<Product>?> GetProductsPriceFilterAsync(ProductsPriceFilter productsPriceFilter);
+        Task<IPagedList<Product>?> SearchByNameAsync(ProductSearchFilter filter);
     }
 }

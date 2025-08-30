@@ -1,4 +1,6 @@
-﻿using SystoQ.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SystoQ.Domain.Common.Enums;
+using SystoQ.Domain.Entities;
 using SystoQ.Domain.Filters.Products;
 using SystoQ.Domain.Repositories;
 using SystoQ.Infrastructure.Persistence;
@@ -22,32 +24,29 @@ namespace SystoQ.Infrastructure.Repositories
             return pagedProducts;
         }
 
-        public async Task<IPagedList<Product>?> GetProductsPriceFilterAsync(ProductsPriceFilter productsPriceFilter)
+        public async Task<IPagedList<Product>?> GetProductsPriceFilterAsync(ProductsPriceFilter filter)
         {
-            var products = await GetAllAsync();
-            var productsQueryable = products.AsQueryable();
+            var query = _context.Products.AsQueryable(); // DbSet<Product>
 
-            if (productsPriceFilter.Price.HasValue && !string.IsNullOrEmpty(productsPriceFilter.PriceCriterias))
+            if (filter.Price.HasValue && filter.Criteria.HasValue)
             {
-                switch (productsPriceFilter.PriceCriterias.ToLower())
+                query = filter.Criteria switch
                 {
-                    case "greaterthan":
-                        productsQueryable = productsQueryable.Where(p => p.Price > productsPriceFilter.Price.Value);
-                        break;
-                    case "lessthan":
-                        productsQueryable = productsQueryable.Where(p => p.Price < productsPriceFilter.Price.Value);
-                        break;
-                    case "equalto":
-                        productsQueryable = productsQueryable.Where(p => p.Price == productsPriceFilter.Price.Value);
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid price criteria specified.");
-                }
+                    PriceCriteria.GreaterThan => query.Where(p => p.Price > filter.Price.Value),
+                    PriceCriteria.LessThan => query.Where(p => p.Price < filter.Price.Value),
+                    PriceCriteria.EqualTo => query.Where(p => p.Price == filter.Price.Value),
+                    _ => query
+                };
             }
 
-            var pagedProducts = await productsQueryable.ToPagedListAsync(productsPriceFilter.PageNumber, productsPriceFilter.PageSize);
+            return await query.ToPagedListAsync(filter.PageNumber, filter.PageSize);
+        }
 
-            return pagedProducts;
+        public Task<IPagedList<Product>?> SearchByNameAsync(ProductSearchFilter filter)
+        {
+            return _context.Products
+                .Where(p => p.Name.Contains(filter.Name!))
+                .ToPagedListAsync(filter.PageNumber, filter.PageSize);
         }
     }
 }
