@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SystoQ.Domain.Repositories;
 
 namespace SystoQ.Domain.Transactions
 {
-    internal interface IUnitOfWork
+    public interface IUnitOfWork
     {
+        ICustomerRepository CustomerRepository { get; }
+        IProductRepository ProductRepository { get; }
+        ISaleRepository SaleRepository { get; }
+
+        Task CommitAsync();
     }
 }

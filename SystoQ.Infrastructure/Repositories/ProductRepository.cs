@@ -8,29 +8,20 @@ using X.PagedList;
 
 namespace SystoQ.Infrastructure.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : Repository<Product>, IProductRepository
     {
-        private readonly SystoQDbContext _context;
-
-        public ProductRepository(SystoQDbContext context)
-        {
-            _context = context;
+        public ProductRepository(SystoQDbContext context) : base(context)
+        {            
         }
 
-        public async Task AddProductAsync(Product product)
+        public async Task<IPagedList<Product>?> GetAllPaginatedAsync(ProductsParameters productsParams)
         {
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
-        }
+            var products = await GetAllAsync();
+            var ordenedProducts = products.OrderBy(p => p.Name);
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
-        {
-            return await _context.Products.ToListAsync();
-        }
+            var pagedProducts = await ordenedProducts.ToPagedListAsync(productsParams.PageNumber, productsParams.PageSize);
 
-        public Task<Product?> GetProductByIdAsync(int id)
-        {
-            return _context.Products.FindAsync(id).AsTask();
+            return pagedProducts;
         }
 
         public async Task<IPagedList<Product>?> GetProductsPriceFilterAsync(ProductsPriceFilter filter)
@@ -49,6 +40,13 @@ namespace SystoQ.Infrastructure.Repositories
             }
 
             return await query.ToPagedListAsync(filter.PageNumber, filter.PageSize);
+        }
+
+        public Task<IPagedList<Product>?> SearchByNameAsync(ProductSearchFilter filter)
+        {
+            return _context.Products
+                .Where(p => p.Name.Contains(filter.Name!))
+                .ToPagedListAsync(filter.PageNumber, filter.PageSize);
         }
     }
 }

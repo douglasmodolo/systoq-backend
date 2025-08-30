@@ -18,6 +18,7 @@ namespace SystoQ.Api.Controllers
         private readonly GetAllProductsUseCase _getAllProductsUseCase;
         private readonly GetProductByIdUseCase _getProductByIdUseCase;
         private readonly GetProductsByPriceRangeUseCase _getProductsByPriceRangeUseCase;
+        private readonly SearchProductsByNameUseCase _searchProductsByNameUseCase;
         private readonly UpdateProductUseCase _updateProductUseCase;
         private readonly PatchProductUseCase _patchProductUseCase;
         private readonly DeleteProductUseCase _deleteProductUseCase;
@@ -27,6 +28,7 @@ namespace SystoQ.Api.Controllers
             GetAllProductsUseCase getAllProductsUseCase, 
             GetProductByIdUseCase getProductByIdUseCase,
             GetProductsByPriceRangeUseCase getProductsByPriceRangeUseCase,
+            SearchProductsByNameUseCase searchProductsByNameUseCase,
             UpdateProductUseCase updateProductUseCase,
             PatchProductUseCase patchProductUseCase,
             DeleteProductUseCase deleteProductUseCase,
@@ -36,6 +38,7 @@ namespace SystoQ.Api.Controllers
             _getAllProductsUseCase = getAllProductsUseCase;
             _getProductByIdUseCase = getProductByIdUseCase;
             _getProductsByPriceRangeUseCase = getProductsByPriceRangeUseCase;
+            _searchProductsByNameUseCase = searchProductsByNameUseCase;
             _updateProductUseCase = updateProductUseCase;
             _patchProductUseCase = patchProductUseCase;
             _deleteProductUseCase = deleteProductUseCase;
@@ -66,7 +69,7 @@ namespace SystoQ.Api.Controllers
             var product = await _getProductByIdUseCase.ExecuteAsync(id);
             if (product == null)
             {
-                return NotFound($"Produto com ID {id} não encontrado.");
+                return NotFound($"Produto não encontrado.");
             }
 
             var productDto = _mapper.Map<ProductDto>(product);
@@ -83,6 +86,25 @@ namespace SystoQ.Api.Controllers
                 return NotFound("Nenhum produto encontrado para o filtro de preço fornecido.");
             }
 
+            return BuildPaginatedProductsResponse(products);
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> Search([FromQuery] ProductSearchFilter filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter.Name))
+            {
+                return BadRequest("O parâmetro 'name' é obrigatório para a pesquisa.");
+            }
+
+            var products = await _searchProductsByNameUseCase.ExecuteAsync(filter);
+
+
+            if (products == null || !products.Any())
+            {
+                return NotFound("Nenhum produto encontrado para a consulta de pesquisa fornecida.");
+            }
+            
             return BuildPaginatedProductsResponse(products);
         }
 
@@ -134,7 +156,7 @@ namespace SystoQ.Api.Controllers
         }
 
         [HttpPatch("/api/products/{id}/partial")]
-        public async Task<ActionResult<UpdateProductResponseDto>> Patch(Guid id, JsonPatchDocument<UpdateProductRequestDto> patchProductDto)
+        public async Task<ActionResult> Patch(Guid id, JsonPatchDocument<UpdateProductRequestDto> patchProductDto)
         {
             if (patchProductDto == null || id == Guid.Empty)
                 return BadRequest("Dados inválidos.");
@@ -145,6 +167,12 @@ namespace SystoQ.Api.Controllers
                 return NotFound("Produto não encontrado.");
 
             var productToPatch = _mapper.Map<UpdateProductRequestDto>(existingProduct);//_mapper.Map<UpdateProductRequestDto>(product);
+            patchProductDto.ApplyTo(productToPatch, ModelState);
+
+            if (!TryValidateModel(productToPatch))
+                return ValidationProblem(ModelState);
+
+            _mapper.Map(productToPatch, existingProduct);
 
             var product = await _patchProductUseCase.ExecuteAsync(
                 id,
@@ -157,9 +185,9 @@ namespace SystoQ.Api.Controllers
             if (product == null)
                 return NotFound("Produto não encontrado após a atualização.");
 
-            var productDto = _mapper.Map<UpdateProductResponseDto>(product);
+            var updatedProductDto = _mapper.Map<UpdateProductResponseDto>(product);
 
-            return Ok(productDto);
+            return Ok(updatedProductDto);
         }
 
         [HttpDelete("{id}")]
@@ -177,7 +205,6 @@ namespace SystoQ.Api.Controllers
 
             return NoContent();
         }
-
 
         #region privateMethods
         private ActionResult<IEnumerable<ProductDto>> BuildPaginatedProductsResponse(IPagedList<Product> products)

@@ -8,11 +8,11 @@ namespace SystoQ.Api.Controllers
     [Route("api/[controller]")]
     public class CustomersController : ControllerBase
     {
-        private readonly AddCustomerUseCase _createCustomerUseCase;
+        private readonly AddCustomerUseCase _addCustomerUseCase;
 
         public CustomersController(AddCustomerUseCase createCustomerUseCase)
         {
-            _createCustomerUseCase = createCustomerUseCase;
+            _addCustomerUseCase = createCustomerUseCase;
         }
 
         [HttpPost]
@@ -24,8 +24,8 @@ namespace SystoQ.Api.Controllers
             }
             try
             {
-                var created = await _createCustomerUseCase.ExecuteAsync(request.Name, request.Email, request.PhoneNumber);
-                
+                var created = await _addCustomerUseCase.ExecuteAsync(request.Name, request.Email, request.PhoneNumber);
+
                 var response = new CustomerDto
                 {
                     Id = created.Id,
