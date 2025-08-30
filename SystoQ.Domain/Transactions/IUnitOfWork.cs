@@ -6,7 +6,7 @@ namespace SystoQ.Domain.Transactions
     {
         ICustomerRepository CustomerRepository { get; }
         IProductRepository ProductRepository { get; }
-        ISaleRepository SaleRepository { get; }
+        IOrderRepository OrderRepository { get; }
 
         Task CommitAsync();
     }

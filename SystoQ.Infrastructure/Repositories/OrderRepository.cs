@@ -4,9 +4,9 @@ using SystoQ.Infrastructure.Persistence;
 
 namespace SystoQ.Infrastructure.Repositories
 {
-    public class SaleRepository : Repository<Sale>, ISaleRepository
+    public class OrderRepository : Repository<Order>, IOrderRepository
     {
-        public SaleRepository(SystoQDbContext context) : base(context)
+        public OrderRepository(SystoQDbContext context) : base(context)
         {            
         }
     }
