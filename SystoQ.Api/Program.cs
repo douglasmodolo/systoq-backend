@@ -45,10 +45,16 @@ builder.Services.AddScoped<PatchProductUseCase>();
 builder.Services.AddScoped<DeleteProductUseCase>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<AddCustomerUseCase>();
+builder.Services.AddScoped<GetAllCustomersUseCase>();
+builder.Services.AddScoped<GetCustomerByIdUseCase>();
+builder.Services.AddScoped<UpdateCustomerUseCase>();
+builder.Services.AddScoped<PatchCustomerUseCase>();
+builder.Services.AddScoped<DeleteCustomerUseCase>();
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<AddSaleUseCase>();
 
 builder.Services.AddAutoMapper(typeof(ProductDTOMappingProfile));
+builder.Services.AddAutoMapper(typeof(CustomerDTOMappingProfile));
 
 var app = builder.Build();
 

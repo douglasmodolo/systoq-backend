@@ -31,8 +31,8 @@ namespace SystoQ.Tests.Application.UseCases.Products
             var product = new Product("Test Product", "This is a test product.", 9.99m, 100);
 
             // reflection
-            var idProperty = typeof(Product).GetProperty("Id", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            idProperty.SetValue(product, productId);
+            //var idProperty = typeof(Product).GetProperty("Id", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            //idProperty.SetValue(product, productId);
 
             _productRepository.GetByIdAsync(productId).Returns(product);
             
